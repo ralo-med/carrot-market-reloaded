@@ -1,0 +1,35 @@
+{
+  "version": 1.1,
+  "atDirectives": [
+    {
+      "name": "@theme",
+      "description": "Define custom theme values for Tailwind CSS 4.0.0",
+      "references": [
+        {
+          "name": "Tailwind CSS 4.0 Documentation",
+          "url": "https://tailwindcss.com/docs/installation"
+        }
+      ]
+    },
+    {
+      "name": "@apply",
+      "description": "Apply Tailwind utility classes to a CSS rule",
+      "references": [
+        {
+          "name": "Tailwind CSS 4.0 Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#apply"
+        }
+      ]
+    },
+    {
+      "name": "@layer",
+      "description": "Define a layer for organizing CSS rules",
+      "references": [
+        {
+          "name": "Tailwind CSS 4.0 Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#layer"
+        }
+      ]
+    }
+  ]
+}

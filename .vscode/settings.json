@@ -1,0 +1,15 @@
+{
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "css.customData": [".vscode/css_custom_data.json"],
+  "tailwindCSS.experimental.classRegex": [
+    ["@apply\\s+([^;}]+)", "([^;}]+)"],
+    ["@layer\\s+\\w+\\s*{[^}]*}", "([^}]+)"],
+    ["@theme\\s*{[^}]*}", "([^}]+)"]
+  ],
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  }
+}

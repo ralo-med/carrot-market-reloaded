@@ -1,1 +1,55 @@
 @import "tailwindcss";
+
+/* ===== 커스텀 테마 값들 ===== */
+@theme {
+  /* 색상 - bg-primary, text-primary, border-primary 등으로 사용 */
+  --color-primary: #ff6b35; /* 예: bg-primary, text-primary */
+  --color-secondary: #f7931e; /* 예: bg-secondary, text-secondary */
+  --color-accent: #ffd23f; /* 예: bg-accent, text-accent */
+
+  /* border-radius - rounded-sexy-name으로 사용 */
+  --radius-sexy-name: 20px 5px 20px 5px; /* 예: rounded-sexy-name */
+}
+
+/* ===== 재사용 가능한 컴포넌트 클래스들 ===== */
+@layer components {
+  /* 버튼 스타일 */
+  .btn-primary {
+    @apply bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary/90 transition-colors;
+  }
+
+  /* 카드 스타일 */
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6 border border-gray-200;
+  }
+
+  /* 입력 필드 스타일 */
+  .input-field {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+  }
+}
+
+/* ===== 커스텀 유틸리티 클래스들 ===== */
+@layer utilities {
+  /* 그라데이션 텍스트 */
+  .text-gradient {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-secondary)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* 커스텀 그림자 */
+  .shadow-custom {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+}
