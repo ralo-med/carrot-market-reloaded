@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/forms";
 
+@layer base {
+  a {
+    @apply text-orange-500;
+  }
+}
+
 /* ===== 커스텀 테마 값들 ===== */
 @theme {
   /* 색상 - bg-primary, text-primary, border-primary 등으로 사용 */
@@ -15,8 +21,8 @@
 /* ===== 재사용 가능한 컴포넌트 클래스들 ===== */
 @layer components {
   /* 버튼 스타일 */
-  .btn-primary {
-    @apply bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors;
+  .primary-btn {
+    @apply w-full bg-orange-500 text-white rounded-md text-center hover:bg-orange-400 transition-colors;
   }
 
   .btn-secondary {
