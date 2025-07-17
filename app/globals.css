@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/forms";
 
 /* ===== 커스텀 테마 값들 ===== */
 @theme {
