@@ -10,6 +10,8 @@ export interface ActionState {
   };
 }
 
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*?[#?!@$%^&*-]).+$/;
+
 function checkUsername(username: string) {
   return !String(username).includes("potato");
 }
@@ -24,13 +26,21 @@ const formSchema = z
             : "Username must be a string!",
       })
       .min(3, { error: "Way too short!!!" })
-      .max(10, { error: "That is too looooong!" })
-      .refine(checkUsername, {
-        error: "No potatoes allowed!",
+      .trim()
+      .toLowerCase()
+      .transform((username) => `🔥 ${username}`)
+      .refine(checkUsername, { error: "No potatoes allowed!" }),
+    email: z.email().toLowerCase(),
+    password: z
+      .string()
+      .min(4, { error: "Password too short" })
+      .regex(passwordRegex, {
+        error:
+          "Passwords must contain at least one UPPERCASE, lowercase, number and special characters #?!@$%^&*-",
       }),
-    email: z.email(),
-    password: z.string().min(10),
-    confirm_password: z.string().min(10),
+    confirm_password: z
+      .string()
+      .min(4, { error: "Confirm password too short" }),
   })
   .check((ctx) => {
     // ctx.value 는 현재 파싱 중인 전체 객체입니다.
