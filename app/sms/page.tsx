@@ -1,10 +1,16 @@
+"use client";
+
 import Button from "@/components/btn";
 import Input from "@/components/input";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { smsLogIn } from "./actions";
 
+const initialState = {
+  token: false,
+};
+
 export default function SMSLogin() {
-  const [state, dispatch] = useFormState(smsLogIn, null);
+  const [state, dispatch] = useActionState(smsLogIn, initialState);
   return (
     <div className="flex flex-col gap-10 py-8 px-6">
       <div className="flex flex-col gap-2 *:font-medium">
@@ -12,23 +18,26 @@ export default function SMSLogin() {
         <h2 className="text-xl">Verify your phone number.</h2>
       </div>
       <form action={dispatch} className="flex flex-col gap-3">
-        <Input
-          type="number"
-          placeholder="Phone number"
-          required
-          errors={state?.fieldErrors?.phoneNumber ?? []}
-          name="phone"
-        />
-        <Input
-          type="number"
-          placeholder="Verification code"
-          required
-          min={100000}
-          max={999999}
-          errors={state?.fieldErrors?.verificationCode ?? []}
-          name="token"
-        />
-        <Button text="Verify" />
+        {state.token ? (
+          <Input
+            name="token"
+            type="number"
+            placeholder="Verification code"
+            required
+            min={100000}
+            max={999999}
+            errors={[]}
+          />
+        ) : (
+          <Input
+            name="phone"
+            type="text"
+            placeholder="Phone number"
+            required
+            errors={[]}
+          />
+        )}
+        <Button text={state.token ? "Verify Token" : "Send Verification SMS"} />
       </form>
     </div>
   );
