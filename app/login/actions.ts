@@ -1,7 +1,10 @@
 "use server";
 
 interface FormState {
-  errors?: string[];
+  fieldErrors?: {
+    email?: string[];
+    password?: string[];
+  };
 }
 
 export async function handleForm(
@@ -10,6 +13,9 @@ export async function handleForm(
   console.log(prevState);
   await new Promise((resolve) => setTimeout(resolve, 5000));
   return {
-    errors: ["wrong password", "password too short"],
+    fieldErrors: {
+      email: ["wrong email"],
+      password: ["wrong password"],
+    },
   };
 }
