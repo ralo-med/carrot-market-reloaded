@@ -1,20 +1,20 @@
 "use server";
+import {
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_REGEX,
+  PASSWORD_REGEX_ERROR,
+} from "@/lib/constants";
 import { z } from "zod";
 
-export interface ActionState {
-  fieldErrors?: {
-    username?: string[];
-    email?: string[];
-    password?: string[];
-    confirm_password?: string[];
-  };
-}
+const checkUsername = (username: string) => !username.includes("potato");
 
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*?[#?!@$%^&*-]).+$/;
-
-function checkUsername(username: string) {
-  return !String(username).includes("potato");
-}
+const checkPasswords = ({
+  password,
+  confirm_password,
+}: {
+  password: string;
+  confirm_password: string;
+}) => password === confirm_password;
 
 const formSchema = z
   .object({
@@ -25,48 +25,33 @@ const formSchema = z
             ? "Where is my username???"
             : "Username must be a string!",
       })
-      .min(3, { error: "Way too short!!!" })
-      .trim()
       .toLowerCase()
-      .transform((username) => `🔥 ${username}`)
-      .refine(checkUsername, { error: "No potatoes allowed!" }),
-    email: z.email().toLowerCase(),
+      .trim()
+      .transform((username) => `🔥 ${username} 🔥`)
+      .refine(checkUsername, "No potatoes allowed!"),
+    email: z.string().email().toLowerCase(),
     password: z
       .string()
-      .min(4, { error: "Password too short" })
-      .regex(passwordRegex, {
-        error:
-          "Passwords must contain at least one UPPERCASE, lowercase, number and special characters #?!@$%^&*-",
-      }),
-    confirm_password: z
-      .string()
-      .min(4, { error: "Confirm password too short" }),
+      .min(PASSWORD_MIN_LENGTH)
+      .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
+    confirm_password: z.string().min(PASSWORD_MIN_LENGTH),
   })
-  .check((ctx) => {
-    // ctx.value 는 현재 파싱 중인 전체 객체입니다.
-    const { password, confirm_password } = ctx.value as {
-      password: string;
-      confirm_password: string;
-    };
-    if (password !== confirm_password) {
-      ctx.issues.push({
-        code: "custom",
-        message: "Two passwords should be equal",
-        path: ["confirm_password"],
-        input: confirm_password,
-      });
-    }
+  .refine(checkPasswords, {
+    message: "Both passwords should be the same!",
+    path: ["confirm_password"],
   });
 
-export async function createAccount(
-  prevState: ActionState,
-  formData: FormData
-): Promise<ActionState> {
-  const data = Object.fromEntries(formData.entries());
+export async function createAccount(prevState: unknown, formData: FormData) {
+  const data = {
+    username: formData.get("username"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    confirm_password: formData.get("confirm_password"),
+  };
   const result = formSchema.safeParse(data);
   if (!result.success) {
-    const { fieldErrors } = z.flattenError(result.error);
-    return { fieldErrors };
+    return result.error.flatten();
+  } else {
+    console.log(result.data);
   }
-  return {};
 }
