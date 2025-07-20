@@ -50,6 +50,7 @@ export async function smsLogIn(prevState: ActionState, formData: FormData) {
         },
       };
     } else {
+      //login
       redirect("/");
     }
   }
