@@ -8,6 +8,14 @@ import { createAccount } from "./actions";
 
 export default function CreateAccount() {
   const [state, dispatch] = useActionState(createAccount, null);
+
+  const getFieldErrors = (fieldName: string) => {
+    if (!state || !state.issues) return [];
+    return state.issues
+      .filter((issue) => issue.path.includes(fieldName))
+      .map((issue) => issue.message);
+  };
+
   return (
     <div className="flex flex-col gap-10 py-8 px-6">
       <div className="flex flex-col gap-2 *:font-medium">
@@ -20,28 +28,28 @@ export default function CreateAccount() {
           type="text"
           placeholder="Username"
           required
-          errors={state?.fieldErrors?.username ?? []}
+          errors={getFieldErrors("username")}
         />
         <Input
           name="email"
           type="email"
           placeholder="Email"
           required
-          errors={state?.fieldErrors?.email ?? []}
+          errors={getFieldErrors("email")}
         />
         <Input
           name="password"
           type="password"
           placeholder="Password"
           required
-          errors={state?.fieldErrors?.password ?? []}
+          errors={getFieldErrors("password")}
         />
         <Input
           name="confirm_password"
           type="password"
           placeholder="Confirm Password"
           required
-          errors={state?.fieldErrors?.confirm_password ?? []}
+          errors={getFieldErrors("confirm_password")}
         />
         <Button text="Create account" />
       </form>
