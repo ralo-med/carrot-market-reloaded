@@ -1,4 +1,5 @@
 "use server";
+import bcrypt from "bcrypt";
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants";
 import db from "@/lib/db";
 import { z } from "zod";
@@ -53,7 +54,7 @@ const formSchema = z
       })
       .toLowerCase()
       .trim()
-      // .transform((username) => `🔥 ${userna  me} 🔥`)
+      // .transform((username) => `🔥 ${username} 🔥`)
       .refine(checkUsername, "No potatoes allowed!")
       .refine(checkUniqueUsername, "This username is already taken"),
     email: z
@@ -81,11 +82,21 @@ export async function createAccount(prevState: unknown, formData: FormData) {
   };
   const result = await formSchema.safeParseAsync(data);
   if (!result.success) {
-    return result.error;
+    return z.flattenError(result.error);
   } else {
-    // hash password
-    // save the user to db
+    const hashedPassword = await bcrypt.hash(result.data.password, 12);
+    await db.user.create({
+      data: {
+        username: result.data.username,
+        email: result.data.email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+      },
+    });
     // log the user in
     // redirect "/home"
+    return { success: true };
   }
 }
