@@ -3,6 +3,13 @@ import bcrypt from "bcrypt";
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants";
 import db from "@/lib/db";
 import { z } from "zod";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { getIronSession } from "iron-session";
+
+interface SessionData {
+  id?: number;
+}
 
 const checkUsername = (username: string) => !username.includes("potato");
 
@@ -80,12 +87,12 @@ export async function createAccount(prevState: unknown, formData: FormData) {
     password: formData.get("password"),
     confirm_password: formData.get("confirm_password"),
   };
-  const result = await formSchema.safeParseAsync(data);
+  const result = await formSchema.spa(data);
   if (!result.success) {
     return z.flattenError(result.error);
   } else {
     const hashedPassword = await bcrypt.hash(result.data.password, 12);
-    await db.user.create({
+    const user = await db.user.create({
       data: {
         username: result.data.username,
         email: result.data.email,
@@ -96,7 +103,13 @@ export async function createAccount(prevState: unknown, formData: FormData) {
       },
     });
     // log the user in
-    // redirect "/home"
-    return { success: true };
+    const cookie = await getIronSession<SessionData>(await cookies(), {
+      cookieName: "delicious-karrot",
+      password: process.env.COOKIE_PASSWORD!,
+    });
+
+    cookie.id = user.id;
+    await cookie.save();
+    redirect("/profile");
   }
 }
