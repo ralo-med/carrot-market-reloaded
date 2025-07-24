@@ -36,10 +36,11 @@ async function getProduct(id: number) {
 export default async function ProductDetail({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id: idParam } = await params;
   const idSchema = z.coerce.number().positive();
-  const result = idSchema.safeParse(params.id);
+  const result = idSchema.safeParse(idParam);
 
   if (!result.success) {
     return notFound();
@@ -54,7 +55,12 @@ export default async function ProductDetail({
   return (
     <div>
       <div className="relative aspect-square">
-        <Image fill src={product.photo ?? ""} alt={product.title} />
+        <Image
+          className="object-cover"
+          fill
+          src={product.photo ?? ""}
+          alt={product.title}
+        />
       </div>
       <div className="p-5 flex items-center gap-3 border-b border-neutral-700">
         <div className="size-10 rounded-full">
