@@ -5,6 +5,8 @@ import { UserIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { z } from "zod";
+import { deleteProduct } from "./actions";
 
 async function getIsOwner(userId: number) {
   const session = await getSession();
@@ -36,10 +38,14 @@ export default async function ProductDetail({
 }: {
   params: { id: string };
 }) {
-  const id = Number(params.id);
-  if (isNaN(id)) {
+  const idSchema = z.coerce.number().positive();
+  const result = idSchema.safeParse(params.id);
+
+  if (!result.success) {
     return notFound();
   }
+
+  const id = result.data;
   const product = await getProduct(id);
   if (!product) {
     return notFound();
@@ -76,9 +82,11 @@ export default async function ProductDetail({
           {formatToWon(product.price)}원
         </span>
         {isOwner ? (
-          <button className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold">
-            Delete product
-          </button>
+          <form action={deleteProduct.bind(null, id)}>
+            <button className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold">
+              Delete product
+            </button>
+          </form>
         ) : null}
         <Link
           className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold"
