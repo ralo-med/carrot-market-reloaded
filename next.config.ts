@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    useCache: true, // ⬅️ "use cache" 지시어 활성화
+    cacheComponents: true, // ⬅️ cacheTag 활성화
+  },
   /* config options here */
 };
 

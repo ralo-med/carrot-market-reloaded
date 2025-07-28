@@ -1,34 +1,35 @@
-"use cache"; // ① 파일 전체를 "정적"으로 생성
-import { cache } from "react"; // ② React-19 공식 캐시 API
 import ProductList from "@/components/product-list";
 import db from "@/lib/db";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
+import {
+  unstable_cacheLife as cacheLife,
+  unstable_cacheTag as cacheTag,
+} from "next/cache";
 
 export const metadata = {
   title: "Products",
   description: "Products",
 };
 
-// 60초마다 자동으로 revalidate
-export const revalidate = 60;
-
 // ③ DB-쿼리를 캐싱
-const getInitialProducts = cache(
-  async () =>
-    await db.product.findMany({
-      select: {
-        title: true,
-        price: true,
-        createdAt: true,
-        photo: true,
-        id: true,
-      },
-      take: 1,
-      orderBy: { createdAt: "desc" },
-    })
-);
+export async function getInitialProducts() {
+  "use cache";
+  cacheLife({ revalidate: 60 }); // 60초(1분) 주기로 재검사
+  cacheTag("products"); // 태그로 무효화할 수 있게
+  return db.product.findMany({
+    select: {
+      title: true,
+      price: true,
+      createdAt: true,
+      photo: true,
+      id: true,
+    },
+    take: 1,
+    orderBy: { createdAt: "desc" },
+  });
+}
 
 export type InitialProducts = Prisma.PromiseReturnType<
   typeof getInitialProducts
