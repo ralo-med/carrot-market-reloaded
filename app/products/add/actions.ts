@@ -73,7 +73,8 @@ export async function uploadProduct(_: unknown, formData: FormData) {
       // ① 데이터 캐시 비우기
       revalidateTag(PRODUCTS_TAG); // → getInitialProducts 가 다시 실행됨
       // ② 페이지 HTML도 새로 만들고 싶다면
-      revalidatePath("/products"); // (선택) 목록 페이지 자체 재빌드
+      revalidatePath("/products"); // 상품 목록 페이지 무효화
+      revalidatePath(`/products/${product.id}`); // 새로 생성된 상품 페이지 무효화
 
       redirect(`/products/${product.id}`);
       //redirect("/products")

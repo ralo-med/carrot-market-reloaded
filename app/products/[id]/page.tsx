@@ -8,6 +8,17 @@ import { notFound } from "next/navigation";
 import { z } from "zod";
 import { deleteProduct } from "./actions";
 
+// 🔄 정적 생성을 위한 경로 생성 (SSG) - 교육용
+// export async function generateStaticParams() {
+//   const products = await db.product.findMany({
+//     select: { id: true },
+//   });
+//
+//   return products.map((product) => ({
+//     id: product.id.toString(),
+//   }));
+// }
+
 export async function generateMetadata({
   params,
 }: {
@@ -23,11 +34,15 @@ export async function generateMetadata({
 }
 
 async function getIsOwner(userId: number) {
+  // 🔒 세션 기능 (동적 모드)
   const session = await getSession();
   if (session.id) {
     return session.id === userId;
   }
   return false;
+
+  // 🔒 정적 생성용 임시 코드 (교육용)
+  // return false; // 임시로 항상 false 반환
 }
 
 async function getProduct(id: number) {

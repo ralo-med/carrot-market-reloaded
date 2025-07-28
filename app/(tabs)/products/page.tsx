@@ -8,16 +8,22 @@ import {
   unstable_cacheTag as cacheTag,
 } from "next/cache";
 
+// 🔄 페이지를 항상 동적으로 렌더링 (정적 캐싱 무시)
+export const dynamic = "force-dynamic";
+
+// ⏰ 60초마다 자동으로 페이지 재검증 (ISR)
+export const revalidate = 60;
+
 export const metadata = {
   title: "Products",
   description: "Products",
 };
 
-// ③ DB-쿼리를 캐싱
+// ③ DB-쿼리를 캐싱 (함수 레벨 캐싱)
 export async function getInitialProducts() {
-  "use cache";
-  cacheLife({ revalidate: 60 }); // 60초(1분) 주기로 재검사
-  cacheTag("products"); // 태그로 무효화할 수 있게
+  "use cache"; // 🔒 함수 결과를 캐시
+  cacheLife({ revalidate: 60 }); // ⏰ 60초마다 함수 캐시 자동 재검증
+  cacheTag("products"); // 🏷️ "products" 태그로 수동 무효화 가능
   return db.product.findMany({
     select: {
       title: true,
@@ -36,7 +42,7 @@ export type InitialProducts = Prisma.PromiseReturnType<
 >;
 
 export default async function Products() {
-  const initialProducts = await getInitialProducts(); // 중복 호출도 1회만 실행
+  const initialProducts = await getInitialProducts(); // 🔄 캐시된 함수 호출 (중복 호출도 1회만 실행)
   return (
     <div>
       <ProductList initialProducts={initialProducts} />

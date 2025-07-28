@@ -3,6 +3,7 @@
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export async function deleteProduct(productId: number) {
   const session = await getSession();
@@ -33,6 +34,10 @@ export async function deleteProduct(productId: number) {
       id: productId,
     },
   });
+
+  // 🔄 정적 페이지 무효화
+  revalidatePath(`/products/${productId}`); // 해당 상품 페이지 무효화
+  revalidatePath("/products"); // 상품 목록 페이지 무효화
 
   redirect("/products");
 }
