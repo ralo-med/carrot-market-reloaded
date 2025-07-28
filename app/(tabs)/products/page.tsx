@@ -4,6 +4,11 @@ import { PlusIcon } from "@heroicons/react/24/solid";
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
 
+export const metadata = {
+  title: "Products",
+  description: "Products",
+};
+
 async function getInitialProducts() {
   const products = await db.product.findMany({
     select: {

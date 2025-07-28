@@ -8,6 +8,20 @@ import { notFound } from "next/navigation";
 import { z } from "zod";
 import { deleteProduct } from "./actions";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const product = await getProduct(Number(id));
+
+  return {
+    title: product?.title,
+    description: product?.description,
+  };
+}
+
 async function getIsOwner(userId: number) {
   const session = await getSession();
   if (session.id) {
