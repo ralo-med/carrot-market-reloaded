@@ -19,6 +19,13 @@ import { deleteProduct } from "./actions";
 //   }));
 // }
 
+// 📝 Next.js 동적 라우팅 옵션 설명:
+// 1. generateStaticParams: 빌드 시 정적 페이지 생성 (SSG)
+// 2. dynamic = "force-dynamic": 항상 동적 렌더링 (SSR)
+// 3. dynamic = "force-static": 항상 정적 렌더링 (SSG)
+// 4. dynamicParams = false: generateStaticParams로 생성되지 않은 경로는 404
+// 5. dynamicParams = true: 동적 경로 허용 (기본값)
+
 export async function generateMetadata({
   params,
 }: {
