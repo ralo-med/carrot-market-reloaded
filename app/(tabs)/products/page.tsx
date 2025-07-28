@@ -1,3 +1,5 @@
+"use cache"; // ① 파일 전체를 "정적"으로 생성
+import { cache } from "react"; // ② React-19 공식 캐시 API
 import ProductList from "@/components/product-list";
 import db from "@/lib/db";
 import { PlusIcon } from "@heroicons/react/24/solid";
@@ -9,29 +11,31 @@ export const metadata = {
   description: "Products",
 };
 
-async function getInitialProducts() {
-  const products = await db.product.findMany({
-    select: {
-      title: true,
-      price: true,
-      createdAt: true,
-      photo: true,
-      id: true,
-    },
-    take: 1,
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-  return products;
-}
+// 60초마다 자동으로 revalidate
+export const revalidate = 60;
+
+// ③ DB-쿼리를 캐싱
+const getInitialProducts = cache(
+  async () =>
+    await db.product.findMany({
+      select: {
+        title: true,
+        price: true,
+        createdAt: true,
+        photo: true,
+        id: true,
+      },
+      take: 1,
+      orderBy: { createdAt: "desc" },
+    })
+);
 
 export type InitialProducts = Prisma.PromiseReturnType<
   typeof getInitialProducts
 >;
 
 export default async function Products() {
-  const initialProducts = await getInitialProducts();
+  const initialProducts = await getInitialProducts(); // 중복 호출도 1회만 실행
   return (
     <div>
       <ProductList initialProducts={initialProducts} />
