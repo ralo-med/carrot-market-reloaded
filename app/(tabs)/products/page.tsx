@@ -9,10 +9,10 @@ import {
 } from "next/cache";
 
 // 🔄 페이지를 항상 동적으로 렌더링 (정적 캐싱 무시)
-export const dynamic = "force-dynamic";
+//export const dynamic = "force-dynamic";
 
 // ⏰ 60초마다 자동으로 페이지 재검증 (ISR)
-export const revalidate = 60;
+//export const revalidate = 60;
 
 export const metadata = {
   title: "Products",
