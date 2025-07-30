@@ -1,7 +1,7 @@
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { formatToWon } from "@/lib/utils";
-import { UserIcon } from "@heroicons/react/24/solid";
+import { UserIcon, PhotoIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -90,25 +90,36 @@ export default async function ProductDetail({
   const isOwner = await getIsOwner(product.userId);
   return (
     <div>
-      <div className="relative aspect-square">
-        <Image
-          className="object-cover"
-          fill
-          src={product.photo ?? ""}
-          alt={product.title}
-        />
+      <div className="relative aspect-square bg-gray-200">
+        {product.photo ? (
+          <Image
+            className="object-cover"
+            fill
+            src={product.photo}
+            alt={product.title}
+            unoptimized
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <PhotoIcon className="h-20 text-gray-400" />
+          </div>
+        )}
       </div>
       <div className="p-5 flex items-center gap-3 border-b border-neutral-700">
-        <div className="size-10 rounded-full">
-          {product.user.avatar !== null ? (
+        <div className="size-10 rounded-full bg-gray-200">
+          {product.user.avatar ? (
             <Image
-              src={product.user.avatar ?? ""}
+              src={product.user.avatar}
               width={40}
               height={40}
               alt={product.user.username}
+              unoptimized
+              className="object-cover"
             />
           ) : (
-            <UserIcon />
+            <div className="w-full h-full flex items-center justify-center">
+              <UserIcon className="h-5 text-gray-400" />
+            </div>
           )}
         </div>
         <div>

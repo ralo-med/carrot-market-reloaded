@@ -39,6 +39,7 @@ export default async function Modal({
                 alt={product.title}
                 fill
                 className="object-cover"
+                unoptimized
               />
             ) : (
               <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -58,6 +59,7 @@ export default async function Modal({
                     width={40}
                     height={40}
                     className="object-cover"
+                    unoptimized
                   />
                 ) : (
                   <div className="w-full h-full bg-gray-200 flex items-center justify-center">

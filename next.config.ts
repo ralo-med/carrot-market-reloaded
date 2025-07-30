@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
         hostname: "avatars.githubusercontent.com",
       },
     ],
+    unoptimized: true, // 로컬 이미지 최적화 비활성화
   },
   experimental: {
     useCache: true, // ⬅️ "use cache" 지시어 활성화
