@@ -35,8 +35,8 @@ export default function AddProduct() {
   };
   const [state, dispatch] = useActionState(uploadProduct, null);
   return (
-    <div>
-      <form action={dispatch} className="p-5 flex flex-col gap-5">
+    <div className="p-5 flex flex-col gap-5">
+      <form action={dispatch} className="flex flex-col gap-5">
         <label
           htmlFor="photo"
           className="border-2 aspect-square flex items-center justify-center flex-col text-neutral-300 border-neutral-300 rounded-md border-dashed cursor-pointer bg-center bg-cover"
