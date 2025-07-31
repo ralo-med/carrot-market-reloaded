@@ -20,7 +20,7 @@ export const metadata = {
 };
 
 // ③ DB-쿼리를 캐싱 (함수 레벨 캐싱)
-export async function getInitialProducts() {
+async function getInitialProducts() {
   "use cache"; // 🔒 함수 결과를 캐시
   cacheLife({ revalidate: 60 }); // ⏰ 60초마다 함수 캐시 자동 재검증
   cacheTag("products"); // 🏷️ "products" 태그로 수동 무효화 가능
